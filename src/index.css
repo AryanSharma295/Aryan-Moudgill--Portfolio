@@ -31,10 +31,16 @@
 @layer base {
   * {
     @apply border-border;
-    cursor: none !important;
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@media (pointer: fine) {
+  body.cursor-none,
+  body.cursor-none * {
+    cursor: none !important;
   }
 }
 
@@ -114,5 +120,40 @@
     -webkit-mask-composite: xor;
     mask-composite: exclude;
     pointer-events: none;
+  }
+}
+
+@keyframes pulse-layer {
+  0% {
+    opacity: 0.5;
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+  100% {
+    opacity: 1;
+    border-color: rgba(255, 255, 255, 0.4);
+  }
+}
+
+@keyframes typing-glow {
+  0% {
+    opacity: 0.2;
+    box-shadow: 0 0 0 transparent;
+  }
+  100% {
+    opacity: 0.8;
+    box-shadow: 0 0 15px rgba(168, 85, 247, 0.5);
+  }
+}
+
+@keyframes bar-grow {
+  0% {
+    transform: scaleY(0.8);
+    transform-origin: bottom;
+    opacity: 0.5;
+  }
+  100% {
+    transform: scaleY(1);
+    transform-origin: bottom;
+    opacity: 1;
   }
 }

@@ -1,9 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { motion, useMotionValue, useSpring } from 'framer-motion';
 
 export default function CustomCursor() {
   const [isHovered, setIsHovered] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+
+  const rafRef = useRef(0);
+  const lastEventRef = useRef(null);
+
+  const canUseCustomCursor = useMemo(() => {
+    if (typeof window === 'undefined') return false;
+    const hasFinePointer = window.matchMedia?.('(pointer: fine) and (hover: hover)')?.matches ?? false;
+    const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches ?? false;
+    return hasFinePointer && !reduceMotion;
+  }, []);
 
   const cursorX = useMotionValue(-100);
   const cursorY = useMotionValue(-100);
@@ -13,10 +23,22 @@ export default function CustomCursor() {
   const cursorYSpring = useSpring(cursorY, springConfig);
 
   useEffect(() => {
+    if (!canUseCustomCursor) return;
+
+    document.body.classList.add('cursor-none');
     const moveCursor = (e) => {
-      cursorX.set(e.clientX);
-      cursorY.set(e.clientY);
-      if (!isVisible) setIsVisible(true);
+      // rAF coalescing prevents flooding motion updates
+      lastEventRef.current = e;
+      if (rafRef.current) return;
+
+      rafRef.current = requestAnimationFrame(() => {
+        const evt = lastEventRef.current;
+        if (!evt) return;
+        cursorX.set(evt.clientX);
+        cursorY.set(evt.clientY);
+        if (!isVisible) setIsVisible(true);
+        rafRef.current = 0;
+      });
     };
 
     const handleMouseOver = (e) => {
@@ -39,10 +61,16 @@ export default function CustomCursor() {
     window.addEventListener('mouseover', handleMouseOver);
 
     return () => {
+      document.body.classList.remove('cursor-none');
       window.removeEventListener('mousemove', moveCursor);
       window.removeEventListener('mouseover', handleMouseOver);
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      rafRef.current = 0;
+      lastEventRef.current = null;
     };
-  }, [cursorX, cursorY, isVisible]);
+  }, [canUseCustomCursor, cursorX, cursorY, isVisible]);
+
+  if (!canUseCustomCursor) return null;
 
   if (!isVisible) return null;
 

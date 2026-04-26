@@ -1,6 +1,17 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
+const contentLineLayout = [
+  { width: '62%', marginLeft: '6%' },
+  { width: '48%', marginLeft: '18%' },
+  { width: '74%', marginLeft: '0%' },
+  { width: '40%', marginLeft: '26%' },
+  { width: '68%', marginLeft: '10%' },
+  { width: '52%', marginLeft: '20%' },
+  { width: '78%', marginLeft: '2%' },
+  { width: '44%', marginLeft: '24%' },
+];
+
 const skillsData = [
   {
     id: "intro",
@@ -59,15 +70,13 @@ const renderVisual = (skill) => {
               <div
                 key={i}
                 className="absolute inset-0 border border-white/20 bg-white/5 backdrop-blur-md rounded-2xl shadow-[0_0_30px_rgba(255,255,255,0.05)]"
-                style={{ transform: `translateZ(${i * 30}px)`, animation: `pulse-layer 3s ease-in-out infinite alternate`, animationDelay: `${i * 0.5}s` }}
+                style={{
+                  transform: `translateZ(${i * 30}px)`,
+                  animation: `pulse-layer 3s ease-in-out infinite alternate`,
+                  animationDelay: `${i * 0.5}s`,
+                }}
               />
             ))}
-            <style>{`
-              @keyframes pulse-layer {
-                0% { opacity: 0.5; border-color: rgba(255,255,255,0.1); }
-                100% { opacity: 1; border-color: rgba(255,255,255,0.4); }
-              }
-            `}</style>
           </div>
         </div>
       );
@@ -76,24 +85,18 @@ const renderVisual = (skill) => {
         <div className="w-full aspect-square md:aspect-[4/3] rounded-3xl border border-white/10 overflow-hidden relative flex items-center justify-center liquid-glass shadow-2xl group">
           <div className="absolute inset-0 opacity-30 blur-[60px] group-hover:opacity-50 transition-opacity duration-1000" style={{ background: `radial-gradient(circle at center, ${skill.accent} 0%, transparent 70%)` }} />
           <div className="absolute inset-0 flex flex-col justify-center gap-3 p-8 md:p-12" style={{ WebkitMaskImage: 'linear-gradient(to bottom, transparent, black 20%, black 80%, transparent)' }}>
-            {[...Array(8)].map((_, i) => (
+            {contentLineLayout.map((layout, i) => (
               <div
                 key={i}
                 className="h-2 rounded-full bg-purple-400/30"
                 style={{
-                  width: `${Math.random() * 50 + 30}%`,
-                  marginLeft: `${Math.random() * 20}%`,
+                  width: layout.width,
+                  marginLeft: layout.marginLeft,
                   animation: `typing-glow 2s ease-in-out infinite alternate`,
-                  animationDelay: `${i * 0.2}s`
+                  animationDelay: `${i * 0.2}s`,
                 }}
               />
             ))}
-            <style>{`
-              @keyframes typing-glow {
-                0% { opacity: 0.2; box-shadow: 0 0 0 transparent; }
-                100% { opacity: 0.8; box-shadow: 0 0 15px rgba(168,85,247,0.5); }
-              }
-            `}</style>
           </div>
         </div>
       );
@@ -109,18 +112,12 @@ const renderVisual = (skill) => {
                 style={{
                   height: `${val * 10 + 10}%`,
                   animation: `bar-grow 3s ease-out infinite alternate`,
-                  animationDelay: `${i * 0.3}s`
+                  animationDelay: `${i * 0.3}s`,
                 }}
               >
                 <div className="absolute top-0 left-0 right-0 h-[2px] bg-amber-300 shadow-[0_0_15px_rgba(251,191,36,0.8)]" />
               </div>
             ))}
-            <style>{`
-              @keyframes bar-grow {
-                0% { transform: scaleY(0.8); transform-origin: bottom; opacity: 0.5; }
-                100% { transform: scaleY(1); transform-origin: bottom; opacity: 1; }
-              }
-            `}</style>
           </div>
         </div>
       );
