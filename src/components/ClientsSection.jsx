@@ -63,11 +63,12 @@ function ClientCard({ client, index }) {
       >
         {/* Flow video background */}
         <video
-          autoPlay
+          autoPlay={isInView}
           loop
           muted
           playsInline
-          src={client.video}
+          preload="none"
+          src={isInView ? client.video : undefined}
           style={{
             position: 'absolute',
             inset: 0,

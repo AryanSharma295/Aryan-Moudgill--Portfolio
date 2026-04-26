@@ -1,14 +1,15 @@
-import React, { useEffect } from 'react';
+import React, { Suspense, lazy, useEffect } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import CtaFooter from './components/CtaFooter';
-import Home from './pages/Home';
-import Projects from './pages/Projects';
-import Expertise from './pages/Expertise';
-import WorkWithMe from './pages/WorkWithMe';
-import Legal from './pages/Legal';
 import CustomCursor from './components/CustomCursor';
 import { MusicProvider } from './context/MusicContext';
+
+const Home = lazy(() => import('./pages/Home'));
+const Projects = lazy(() => import('./pages/Projects'));
+const Expertise = lazy(() => import('./pages/Expertise'));
+const WorkWithMe = lazy(() => import('./pages/WorkWithMe'));
+const Legal = lazy(() => import('./pages/Legal'));
 
 // Scroll to top on route change
 function ScrollToTop() {
@@ -27,13 +28,15 @@ function App() {
         <ScrollToTop />
         <div className="relative z-10">
           <Navbar />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/projects" element={<Projects />} />
-            <Route path="/expertise" element={<Expertise />} />
-            <Route path="/work-with-me" element={<WorkWithMe />} />
-            <Route path="/legal/:type" element={<Legal />} />
-          </Routes>
+          <Suspense fallback={<div className="px-6 py-24 text-white/50 font-body">Loading…</div>}>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/projects" element={<Projects />} />
+              <Route path="/expertise" element={<Expertise />} />
+              <Route path="/work-with-me" element={<WorkWithMe />} />
+              <Route path="/legal/:type" element={<Legal />} />
+            </Routes>
+          </Suspense>
           <CtaFooter />
         </div>
       </div>
