@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import VideoBackground from '../components/VideoBackground';
 
 const contentLineLayout = [
   { width: '62%', marginLeft: '6%' },
@@ -179,15 +180,17 @@ export default function Expertise() {
             >
               {/* Background Video */}
               <div className="absolute inset-0 z-0 opacity-60">
-                <video
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  className="w-full h-full object-cover mix-blend-screen"
-                >
-                  <source src="/red_flow.mp4" type="video/mp4" />
-                </video>
+                <div className="absolute inset-0 mix-blend-screen">
+                  <VideoBackground
+                    poster="/optimized/red_flow.jpg"
+                    sources={[
+                      { src: '/optimized/red_flow.webm', type: 'video/webm; codecs=\"vp9\"' },
+                      { src: '/optimized/red_flow.mp4', type: 'video/mp4' },
+                    ]}
+                    className="w-full h-full object-cover"
+                    rootMargin="1400px"
+                  />
+                </div>
                 {/* Overlays for better text readability and blending */}
                 <div className="absolute inset-0 bg-black/40 z-10" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black z-10" />

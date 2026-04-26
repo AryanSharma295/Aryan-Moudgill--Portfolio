@@ -18,6 +18,7 @@ function shouldPrefetchHeavy() {
 
 export default function VideoBackground({
   src,
+  sources,
   isHls = false,
   className,
   filter,
@@ -84,6 +85,18 @@ export default function VideoBackground({
 
     if (!shouldLoad) return;
 
+    const pickSource = () => {
+      const list = Array.isArray(sources) ? sources : null;
+      if (!list?.length) return src;
+
+      for (const s of list) {
+        if (!s?.src) continue;
+        if (!s.type) return s.src;
+        if (video.canPlayType(s.type)) return s.src;
+      }
+      return list[0].src;
+    };
+
     let onLoadedMetadata;
     let cancelled = false;
 
@@ -117,7 +130,7 @@ export default function VideoBackground({
       }
 
       // Regular MP4
-      video.src = src;
+      video.src = pickSource();
     })();
 
     return () => {
@@ -128,7 +141,7 @@ export default function VideoBackground({
         hlsRef.current = null;
       }
     };
-  }, [src, isHls, shouldLoad, canAutoplay]);
+  }, [src, sources, isHls, shouldLoad, canAutoplay]);
 
   return (
     <div className={cn('absolute inset-0', className)} style={{ filter }}>

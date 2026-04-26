@@ -13,7 +13,7 @@ const clients = [
     glow: 'rgba(52, 211, 153, 0.1)',
     textColor: 'rgb(167, 243, 208)',
     number: '01',
-    video: '/flow-green.mp4',
+    videoBase: 'flow-green',
   },
   {
     name: 'Ryoon.in',
@@ -25,7 +25,7 @@ const clients = [
     glow: 'rgba(99, 148, 255, 0.1)',
     textColor: 'rgb(191, 219, 254)',
     number: '02',
-    video: '/flow-blue.mp4',
+    videoBase: 'flow-blue',
   },
   {
     name: 'Yuh Aight',
@@ -37,7 +37,7 @@ const clients = [
     glow: 'rgba(255, 255, 255, 0.05)',
     textColor: 'rgb(229, 229, 229)',
     number: '03',
-    video: '/flow-white.mp4',
+    videoBase: 'flow-white',
   },
 ];
 
@@ -68,7 +68,7 @@ function ClientCard({ client, index }) {
           muted
           playsInline
           preload="none"
-          src={isInView ? client.video : undefined}
+          poster={`/optimized/${client.videoBase}.jpg`}
           style={{
             position: 'absolute',
             inset: 0,
@@ -78,7 +78,14 @@ function ClientCard({ client, index }) {
             willChange: 'transform',
             transform: 'translateZ(0)',
           }}
-        />
+        >
+          {isInView ? (
+            <>
+              <source src={`/optimized/${client.videoBase}.webm`} type='video/webm; codecs="vp9"' />
+              <source src={`/optimized/${client.videoBase}.mp4`} type="video/mp4" />
+            </>
+          ) : null}
+        </video>
 
         {/* Dark overlay so text stays readable */}
         <div className="absolute inset-0 bg-black/55 pointer-events-none" />

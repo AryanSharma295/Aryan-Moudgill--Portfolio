@@ -48,7 +48,9 @@ export function MusicProvider({ children }) {
       return;
     }
 
-    audio.src = `${currentTrack}?v=${Date.now()}`;
+    // Keep the URL stable so Vercel/CDN can cache the file.
+    // (Autoplay is already gated by user interaction.)
+    audio.src = currentTrack;
     audio.loop = true;
     audio.volume = 0.5;
     audio.muted = isMuted;

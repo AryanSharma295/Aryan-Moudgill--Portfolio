@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
+import VideoBackground from './VideoBackground';
 
 const skills = [
   'Website Building', 'Content Writing', 'Marketing Management',
@@ -56,21 +57,14 @@ export default function AboutSection() {
 
       {/* Video: absolute behind content, contain = full video, black bars blend with bg */}
       <div className="absolute inset-0 z-0">
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          src="/about-video.mp4"
-          style={{
-            width: '100%',
-            height: '100%',
-            objectFit: 'contain',
-            objectPosition: 'center',
-            opacity: 0.5,
-            willChange: 'transform',
-            transform: 'translateZ(0)',
-          }}
+        <VideoBackground
+          poster="/optimized/about-video.jpg"
+          sources={[
+            { src: '/optimized/about-video.webm', type: 'video/webm; codecs="vp9"' },
+            { src: '/optimized/about-video.mp4', type: 'video/mp4' },
+          ]}
+          className="w-full h-full object-contain opacity-50"
+          rootMargin="1200px"
         />
       </div>
 

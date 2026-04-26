@@ -11,7 +11,11 @@ export default function Hero() {
       {/* Background Video */}
       <div className="absolute inset-0 z-0 overflow-hidden">
         <VideoBackground
-          src="/hero-video.mp4"
+          poster="/optimized/hero-video.jpg"
+          sources={[
+            { src: '/optimized/hero-video.webm', type: 'video/webm; codecs="vp9"' },
+            { src: '/optimized/hero-video.mp4', type: 'video/mp4' },
+          ]}
           className="w-full h-full object-cover opacity-60"
         />
         <div className="absolute top-0 left-0 right-0 h-[400px] bg-gradient-to-b from-black to-transparent pointer-events-none z-10"></div>
