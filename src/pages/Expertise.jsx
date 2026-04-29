@@ -57,6 +57,13 @@ const skillsData = [
     description: "First impressions are everything. I design high-impact visuals and thumbnails that dominate the feed. I focus on visual hierarchy and \"click-psychology\" to make sure your brand gets the attention it deserves.",
     icon: "/icon-camera.png",
     accent: "rgba(236, 72, 153, 0.4)" // Neon Pink
+  },
+  {
+    id: "ads",
+    title: "Campaign Excellence",
+    subtitle: "Meta-Ads Management.",
+    description: "Better opportunity scores, reduced cost per click and order, and more brand visibility. I structure data-backed advertising funnels designed for maximum ROI and sustained scale.",
+    accent: "rgba(16, 185, 129, 0.4)" // Neon Emerald
   }
 ];
 
@@ -158,6 +165,27 @@ const renderVisual = (skill) => {
               ))}
             </div>
             <div className="w-10 h-10 md:w-16 md:h-16 rounded-full bg-pink-500/50 backdrop-blur-md border border-pink-300/50 shadow-[0_0_30px_rgba(236,72,153,0.8)] z-10 animate-pulse" />
+          </div>
+        </div>
+      );
+    case 'ads':
+      return (
+        <div className="w-full aspect-square md:aspect-[4/3] rounded-3xl border border-white/10 overflow-hidden relative flex items-center justify-center liquid-glass shadow-2xl group">
+          <div className="absolute inset-0 opacity-30 blur-[60px] group-hover:opacity-50 transition-opacity duration-1000" style={{ background: `radial-gradient(circle at center, ${skill.accent} 0%, transparent 70%)` }} />
+          <div className="relative z-10 w-48 h-48 md:w-64 md:h-64 flex items-center justify-center animate-[pulse_4s_ease-in-out_infinite]">
+            <svg className="w-full h-full drop-shadow-[0_0_20px_rgba(16,185,129,0.6)]" viewBox="0 0 100 100">
+              {/* Target Circles */}
+              <circle cx="50" cy="50" r="40" stroke="#10b981" strokeWidth="1" fill="none" opacity="0.3" strokeDasharray="4 4" className="animate-[spin_20s_linear_infinite_reverse]" style={{ transformOrigin: 'center' }} />
+              <circle cx="50" cy="50" r="25" stroke="#10b981" strokeWidth="2" fill="none" opacity="0.5" className="animate-[spin_10s_linear_infinite]" style={{ transformOrigin: 'center' }} />
+              <circle cx="50" cy="50" r="10" fill="#10b981" opacity="0.8" className="animate-ping" style={{ transformOrigin: 'center' }} />
+              <circle cx="50" cy="50" r="10" fill="#10b981" />
+              {/* Graph Line */}
+              <path d="M20 70 L40 50 L60 60 L80 30" stroke="#10b981" strokeWidth="3" fill="none" className="drop-shadow-lg" />
+              <circle cx="20" cy="70" r="3" fill="#ffffff" />
+              <circle cx="40" cy="50" r="3" fill="#ffffff" />
+              <circle cx="60" cy="60" r="3" fill="#ffffff" />
+              <circle cx="80" cy="30" r="3" fill="#ffffff" />
+            </svg>
           </div>
         </div>
       );

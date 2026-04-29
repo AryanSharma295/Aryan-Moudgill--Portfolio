@@ -1,6 +1,6 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { ArrowUpRight, Play, ExternalLink } from 'lucide-react';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ArrowUpRight, Play, ExternalLink, ZoomIn, X } from 'lucide-react';
 
 const projectData = [
   {
@@ -13,8 +13,8 @@ const projectData = [
         items: [
           {
             name: "aryanmoudgill.com",
-            link: "https://aryanmoudgill.com",
-            thumbnail: "https://s0.wp.com/mshots/v1/https://aryanmoudgill.com?w=800",
+            link: "https://aryan-moudgill-portfolio.vercel.app/",
+            thumbnail: "https://s0.wp.com/mshots/v1/https://aryan-moudgill-portfolio.vercel.app/?w=800",
             type: "image",
             aspect: "aspect-video"
           }
@@ -134,103 +134,164 @@ const projectData = [
         ]
       }
     ]
+  },
+  {
+    id: "ads",
+    title: "Campaign Excellence",
+    subs: [
+      {
+        title: "Meta-Ads Management",
+        description: "Better opportunity score, reduced cost per click/order, and more brand visibility.",
+        items: [
+          {
+            name: "Opportunity Score",
+            thumbnail: "/meta_ad_1.jpeg",
+            type: "image",
+            aspect: "aspect-video"
+          },
+          {
+            name: "Dashboard Analytics",
+            thumbnail: "/meta_ad_2.jpeg",
+            type: "image",
+            aspect: "aspect-video"
+          }
+        ]
+      }
+    ]
   }
 ];
 
-const ProjectCard = ({ item }) => (
-  <motion.a
-    href={item.link}
-    target="_blank"
-    rel="noopener noreferrer"
-    initial={{ opacity: 0, y: 20 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true }}
-    whileHover={{ y: -10 }}
-    className="group relative block w-full"
-  >
-    <div className={`relative ${item.aspect || 'aspect-video'} rounded-2xl overflow-hidden liquid-glass border border-white/10 shadow-2xl transition-all duration-500 group-hover:border-amber-300/30`}>
-      <img 
-        src={item.thumbnail} 
-        alt={item.name}
-        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-70 group-hover:opacity-100"
-      />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
-      
-      {/* Type Indicator */}
-      <div className="absolute top-4 right-4 liquid-glass-strong rounded-full p-2 text-white/80 group-hover:text-amber-300 transition-colors z-20">
-        {item.type === 'video' ? <Play className="w-4 h-4" /> : <ExternalLink className="w-4 h-4" />}
-      </div>
+const ProjectCard = ({ item, onZoom }) => {
+  const isLink = !!item.link;
+  const Wrapper = isLink ? motion.a : motion.div;
+  const wrapperProps = isLink ? { href: item.link, target: "_blank", rel: "noopener noreferrer" } : { onClick: onZoom };
 
-      {/* Info Overlay */}
-      <div className="absolute bottom-6 left-6 right-6 translate-y-2 group-hover:translate-y-0 transition-transform duration-500 z-20">
-        <h4 className="text-xl font-heading italic text-white mb-2 flex items-center gap-2">
-          {item.name}
-          <ArrowUpRight className="w-4 h-4 opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all" />
-        </h4>
-        <div className="h-px w-0 group-hover:w-full bg-amber-300/50 transition-all duration-500" />
+  return (
+    <Wrapper
+      {...wrapperProps}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      whileHover={{ y: -10 }}
+      className={`group relative block w-full cursor-pointer`}
+    >
+      <div className={`relative ${item.aspect || 'aspect-video'} rounded-2xl overflow-hidden liquid-glass border border-white/10 shadow-2xl transition-all duration-500 group-hover:border-amber-300/30`}>
+        <img 
+          src={item.thumbnail} 
+          alt={item.name}
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-70 group-hover:opacity-100"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
+        
+        {/* Type Indicator */}
+        <div className="absolute top-4 right-4 liquid-glass-strong rounded-full p-2 text-white/80 group-hover:text-amber-300 transition-colors z-20">
+          {isLink ? (item.type === 'video' ? <Play className="w-4 h-4" /> : <ExternalLink className="w-4 h-4" />) : <ZoomIn className="w-4 h-4" />}
+        </div>
+
+        {/* Info Overlay */}
+        <div className="absolute bottom-6 left-6 right-6 translate-y-2 group-hover:translate-y-0 transition-transform duration-500 z-20">
+          <h4 className="text-xl font-heading italic text-white mb-2 flex items-center gap-2">
+            {item.name}
+            {isLink && <ArrowUpRight className="w-4 h-4 opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all" />}
+          </h4>
+          <div className="h-px w-0 group-hover:w-full bg-amber-300/50 transition-all duration-500" />
+        </div>
       </div>
-    </div>
-  </motion.a>
-);
+    </Wrapper>
+  );
+};
 
 export default function ProjectCatalogue() {
+  const [zoomedImg, setZoomedImg] = useState(null);
+
   return (
-    <section className="py-24 px-6 max-w-7xl mx-auto space-y-48">
-      {projectData.map((category, catIdx) => (
-        <div key={category.id} className="relative space-y-20">
-          {/* Ambient background glow for section */}
-          <div className="absolute top-0 -left-24 w-96 h-96 bg-amber-500/5 blur-[120px] rounded-full pointer-events-none" />
-          
-          {/* Main Category Heading */}
-          <div className="flex flex-col md:flex-row items-baseline gap-4 md:gap-8 border-b border-white/10 pb-12 relative z-10">
-            <span className="font-mono text-amber-300/40 text-sm tracking-[0.4em] uppercase">
-              Phase 0{catIdx + 1}
-            </span>
-            <h2 className="text-5xl md:text-8xl lg:text-[10rem] font-heading italic text-white tracking-tighter leading-none">
-              {category.title}
-            </h2>
-          </div>
+    <>
+      <section className="py-24 px-6 max-w-7xl mx-auto space-y-48">
+        {projectData.map((category, catIdx) => (
+          <div key={category.id} className="relative space-y-20">
+            {/* Ambient background glow for section */}
+            <div className="absolute top-0 -left-24 w-96 h-96 bg-amber-500/5 blur-[120px] rounded-full pointer-events-none" />
+            
+            {/* Main Category Heading */}
+            <div className="flex flex-col md:flex-row items-baseline gap-4 md:gap-8 border-b border-white/10 pb-12 relative z-10">
+              <span className="font-mono text-amber-300/40 text-sm tracking-[0.4em] uppercase">
+                Phase 0{catIdx + 1}
+              </span>
+              <h2 className="text-5xl md:text-8xl lg:text-[10rem] font-heading italic text-white tracking-tighter leading-none">
+                {category.title}
+              </h2>
+            </div>
 
-          <div className="space-y-32 relative z-10">
-            {category.subs.map((sub, subIdx) => (
-              <div key={subIdx} className="space-y-12">
-                {/* Sub Heading with vertical line */}
-                <div className="flex gap-8 group">
-                  <div className="w-px bg-gradient-to-b from-amber-300/50 to-transparent self-stretch group-hover:from-amber-300 transition-colors duration-500" />
-                  <div className="max-w-2xl">
-                    <h3 className="text-3xl md:text-4xl font-heading italic text-white mb-6">
-                      {sub.title}
-                    </h3>
-                    <p className="text-white/40 font-body font-light text-base md:text-lg leading-relaxed">
-                      {sub.description}
-                    </p>
+            <div className="space-y-32 relative z-10">
+              {category.subs.map((sub, subIdx) => (
+                <div key={subIdx} className="space-y-12">
+                  {/* Sub Heading with vertical line */}
+                  <div className="flex gap-8 group">
+                    <div className="w-px bg-gradient-to-b from-amber-300/50 to-transparent self-stretch group-hover:from-amber-300 transition-colors duration-500" />
+                    <div className="max-w-2xl">
+                      <h3 className="text-3xl md:text-4xl font-heading italic text-white mb-6">
+                        {sub.title}
+                      </h3>
+                      <p className="text-white/40 font-body font-light text-base md:text-lg leading-relaxed">
+                        {sub.description}
+                      </p>
+                    </div>
                   </div>
-                </div>
 
-                {/* Project Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 lg:gap-12 pt-4 items-start">
-                  {sub.items.map((item, itemIdx) => (
-                    <ProjectCard key={itemIdx} item={item} />
-                  ))}
-                  
-                  {/* Many More Card */}
-                  <div className="group relative block w-full pointer-events-none self-stretch">
-                    <div className="relative h-full min-h-[200px] rounded-2xl overflow-hidden liquid-glass border border-white/5 flex flex-col items-center justify-center space-y-4 opacity-50 transition-all duration-500 group-hover:opacity-100">
-                      <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center">
-                        <span className="text-2xl font-light text-white/40">+</span>
-                      </div>
-                      <div className="text-center">
-                        <h4 className="text-xl font-heading italic text-white/40">Many More</h4>
-                        <p className="text-[10px] font-mono uppercase tracking-widest text-white/20">Archive pending</p>
+                  {/* Project Grid */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 lg:gap-12 pt-4 items-start">
+                    {sub.items.map((item, itemIdx) => (
+                      <ProjectCard key={itemIdx} item={item} onZoom={() => !item.link && setZoomedImg(item.thumbnail)} />
+                    ))}
+                    
+                    {/* Many More Card */}
+                    <div className="group relative block w-full pointer-events-none self-stretch">
+                      <div className="relative h-full min-h-[200px] rounded-2xl overflow-hidden liquid-glass border border-white/5 flex flex-col items-center justify-center space-y-4 opacity-50 transition-all duration-500 group-hover:opacity-100">
+                        <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center">
+                          <span className="text-2xl font-light text-white/40">+</span>
+                        </div>
+                        <div className="text-center">
+                          <h4 className="text-xl font-heading italic text-white/40">Many More</h4>
+                          <p className="text-[10px] font-mono uppercase tracking-widest text-white/20">Archive pending</p>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
-      ))}
-    </section>
+        ))}
+      </section>
+
+      <AnimatePresence>
+        {zoomedImg && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setZoomedImg(null)}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4 cursor-pointer"
+          >
+            <button 
+              onClick={() => setZoomedImg(null)}
+              className="absolute top-6 right-6 text-white/50 hover:text-white transition-colors"
+            >
+              <X className="w-8 h-8" />
+            </button>
+            <motion.img
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              transition={{ type: "spring", damping: 25, stiffness: 300 }}
+              src={zoomedImg}
+              alt="Zoomed view"
+              className="max-w-full max-h-[90vh] object-contain rounded-xl shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 }
