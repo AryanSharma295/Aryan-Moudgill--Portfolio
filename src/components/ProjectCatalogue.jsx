@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowUpRight, Play, ExternalLink, ZoomIn, X } from 'lucide-react';
 
@@ -179,17 +180,17 @@ const ProjectCard = ({ item, onZoom }) => {
         <img 
           src={item.thumbnail} 
           alt={item.name}
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-70 group-hover:opacity-100"
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-70 group-hover:opacity-100 pointer-events-none"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-60 group-hover:opacity-40 transition-opacity pointer-events-none" />
         
         {/* Type Indicator */}
-        <div className="absolute top-4 right-4 liquid-glass-strong rounded-full p-2 text-white/80 group-hover:text-amber-300 transition-colors z-20">
+        <div className="absolute top-4 right-4 liquid-glass-strong rounded-full p-2 text-white/80 group-hover:text-amber-300 transition-colors z-20 pointer-events-none">
           {isLink ? (item.type === 'video' ? <Play className="w-4 h-4" /> : <ExternalLink className="w-4 h-4" />) : <ZoomIn className="w-4 h-4" />}
         </div>
 
         {/* Info Overlay */}
-        <div className="absolute bottom-6 left-6 right-6 translate-y-2 group-hover:translate-y-0 transition-transform duration-500 z-20">
+        <div className="absolute bottom-6 left-6 right-6 translate-y-2 group-hover:translate-y-0 transition-transform duration-500 z-20 pointer-events-none">
           <h4 className="text-xl font-heading italic text-white mb-2 flex items-center gap-2">
             {item.name}
             {isLink && <ArrowUpRight className="w-4 h-4 opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all" />}
@@ -241,7 +242,7 @@ export default function ProjectCatalogue() {
                   {/* Project Grid */}
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 lg:gap-12 pt-4 items-start">
                     {sub.items.map((item, itemIdx) => (
-                      <ProjectCard key={itemIdx} item={item} onZoom={() => !item.link && setZoomedImg(item.thumbnail)} />
+                      <ProjectCard key={itemIdx} item={item} onZoom={() => setZoomedImg(item.thumbnail)} />
                     ))}
                     
                     {/* Many More Card */}
@@ -264,34 +265,41 @@ export default function ProjectCatalogue() {
         ))}
       </section>
 
-      <AnimatePresence>
-        {zoomedImg && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setZoomedImg(null)}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4 cursor-pointer"
-          >
-            <button 
+      {createPortal(
+        <AnimatePresence>
+          {zoomedImg && (
+            <motion.div
+              key="lightbox"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
               onClick={() => setZoomedImg(null)}
-              className="absolute top-6 right-6 text-white/50 hover:text-white transition-colors"
+              style={{ position: 'fixed', inset: 0, zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,0.92)', padding: '1rem', cursor: 'pointer' }}
             >
-              <X className="w-8 h-8" />
-            </button>
-            <motion.img
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              src={zoomedImg}
-              alt="Zoomed view"
-              className="max-w-full max-h-[90vh] object-contain rounded-xl shadow-2xl"
-              onClick={(e) => e.stopPropagation()}
-            />
-          </motion.div>
-        )}
-      </AnimatePresence>
+              <button
+                onClick={() => setZoomedImg(null)}
+                style={{ position: 'absolute', top: '1.5rem', right: '1.5rem', color: 'rgba(255,255,255,0.5)', background: 'none', border: 'none', cursor: 'pointer' }}
+                onMouseEnter={e => e.currentTarget.style.color = '#fff'}
+                onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.5)'}
+              >
+                <X className="w-8 h-8" />
+              </button>
+              <motion.img
+                key={zoomedImg}
+                initial={{ scale: 0.85, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.85, opacity: 0 }}
+                transition={{ type: 'spring', damping: 25, stiffness: 260 }}
+                src={zoomedImg}
+                alt="Zoomed view"
+                style={{ maxWidth: '100%', maxHeight: '90vh', objectFit: 'contain', borderRadius: '0.75rem', boxShadow: '0 25px 60px rgba(0,0,0,0.8)', display: 'block' }}
+                onClick={(e) => e.stopPropagation()}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
     </>
   );
 }
