@@ -39,7 +39,7 @@ const PRELOAD_VIDEOS = [
   '/optimized/about-video.webm',
   '/optimized/red_flow.webm',
   '/optimized/flow-blue.webm',
-  '/optimized/flow-green-final.mp4',
+  '/optimized/flow-green-final.webm',
   '/optimized/flow-white.webm',
 ];
 

@@ -102,9 +102,7 @@ function ClientCard({ client, index }) {
             transition: 'opacity 500ms ease-out',
           }}
         >
-          {client.videoBase !== 'flow-green-final' && (
-            <source src={`/optimized/${client.videoBase}.webm`} type='video/webm; codecs="vp9"' />
-          )}
+          <source src={`/optimized/${client.videoBase}.webm`} type='video/webm; codecs="vp9"' />
           <source src={`/optimized/${client.videoBase}.mp4`} type="video/mp4" />
         </video>
 
