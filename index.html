@@ -50,7 +50,33 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
     <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
-    
+
+    <!-- ── Critical above-fold assets (preload = highest priority) ── -->
+    <link rel="preload" as="image" href="/optimized/hero-video.jpg" fetchpriority="high" />
+    <link rel="preload" as="image" href="/favicon.png" fetchpriority="high" />
+    <link rel="preload" as="video" href="/optimized/hero-video.webm" type="video/webm" fetchpriority="high" />
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Barlow:wght@300;400;500;600&display=swap" />
+
+    <!-- ── Below-fold video posters ── -->
+    <link rel="preload" as="image" href="/optimized/about-video.jpg" />
+    <link rel="preload" as="image" href="/optimized/red_flow.jpg" />
+    <link rel="preload" as="image" href="/optimized/flow-blue.jpg" />
+    <link rel="preload" as="image" href="/optimized/flow-green-final.jpg" />
+    <link rel="preload" as="image" href="/optimized/flow-white.jpg" />
+
+    <!-- ── Below-fold videos (prefetch = lower priority, after critical) ── -->
+    <link rel="prefetch" as="video" href="/optimized/about-video.webm" />
+    <link rel="prefetch" as="video" href="/optimized/red_flow.webm" />
+    <link rel="prefetch" as="video" href="/optimized/flow-blue.webm" />
+    <link rel="prefetch" as="video" href="/optimized/flow-green-final.mp4" />
+    <link rel="prefetch" as="video" href="/optimized/flow-white.webm" />
+
+    <!-- ── Music tracks ── -->
+    <link rel="prefetch" as="audio" href="/music_home.mp3" />
+    <link rel="prefetch" as="audio" href="/music_projects.mp3" />
+    <link rel="prefetch" as="audio" href="/music_expertise.mp3" />
+    <link rel="prefetch" as="audio" href="/music_contact.mp3" />
+
     <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet" />
   </head>
   <body class="bg-black text-white antialiased">

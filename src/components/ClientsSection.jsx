@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
 
@@ -13,7 +13,7 @@ const clients = [
     glow: 'rgba(52, 211, 153, 0.1)',
     textColor: 'rgb(167, 243, 208)',
     number: '01',
-    videoBase: 'flow-green',
+    videoBase: 'flow-green-final',
   },
   {
     name: 'Ryoon.in',
@@ -43,8 +43,26 @@ const clients = [
 
 function ClientCard({ client, index }) {
   const ref = useRef(null);
+  const videoRef = useRef(null);
+  const [isLoaded, setIsLoaded] = useState(false);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
   const isEven = index % 2 === 0;
+
+  // Play the video as soon as it enters the viewport.
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video || !isInView) return;
+    
+    // Modern browsers sometimes need a tiny delay if the node just mounted
+    const playPromise = video.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(() => {
+        // Fallback for strict browsers
+        video.muted = true;
+        video.play().catch(() => {});
+      });
+    }
+  }, [isInView]);
 
   return (
     <motion.div
@@ -61,14 +79,17 @@ function ClientCard({ client, index }) {
           boxShadow: `0 0 80px ${client.glow}, inset 0 1px 1px rgba(255,255,255,0.04)`,
         }}
       >
-        {/* Flow video background */}
+        {/* Flow video background — sources always rendered so browser reads from cache */}
         <video
-          autoPlay={isInView}
+          key={client.name}
+          ref={videoRef}
+          autoPlay
           loop
           muted
           playsInline
-          preload="none"
+          preload="auto"
           poster={`/optimized/${client.videoBase}.jpg`}
+          onLoadedData={() => setIsLoaded(true)}
           style={{
             position: 'absolute',
             inset: 0,
@@ -77,14 +98,14 @@ function ClientCard({ client, index }) {
             objectFit: 'cover',
             willChange: 'transform',
             transform: 'translateZ(0)',
+            opacity: isLoaded ? 1 : 0,
+            transition: 'opacity 500ms ease-out',
           }}
         >
-          {isInView ? (
-            <>
-              <source src={`/optimized/${client.videoBase}.webm`} type='video/webm; codecs="vp9"' />
-              <source src={`/optimized/${client.videoBase}.mp4`} type="video/mp4" />
-            </>
-          ) : null}
+          {client.videoBase !== 'flow-green-final' && (
+            <source src={`/optimized/${client.videoBase}.webm`} type='video/webm; codecs="vp9"' />
+          )}
+          <source src={`/optimized/${client.videoBase}.mp4`} type="video/mp4" />
         </video>
 
         {/* Dark overlay so text stays readable */}

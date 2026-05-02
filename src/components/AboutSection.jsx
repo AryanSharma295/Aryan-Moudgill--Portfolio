@@ -63,8 +63,9 @@ export default function AboutSection() {
             { src: '/optimized/about-video.webm', type: 'video/webm; codecs="vp9"' },
             { src: '/optimized/about-video.mp4', type: 'video/mp4' },
           ]}
-          className="w-full h-full object-contain opacity-50"
-          rootMargin="1200px"
+          className="w-full h-full opacity-50"
+          objectFit="contain"
+          priority
         />
       </div>
 

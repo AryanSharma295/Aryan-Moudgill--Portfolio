@@ -157,3 +157,138 @@
     opacity: 1;
   }
 }
+
+/* ─────────────────────────────────────────────────
+   SPLASH SCREEN
+───────────────────────────────────────────────── */
+
+/* Fullscreen fixed overlay */
+.splash-root {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #000000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2.5rem;
+  overflow: hidden;
+}
+
+/* Ambient radial glow behind logo */
+.splash-glow {
+  position: absolute;
+  width: 420px;
+  height: 260px;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(245, 197, 24, 0.18) 0%,
+    rgba(245, 197, 24, 0.06) 50%,
+    transparent 75%
+  );
+  animation: bat-pulse 2.2s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+@keyframes bat-pulse {
+  0% {
+    transform: scale(0.92);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+}
+
+/* Logo container */
+.splash-logo {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  filter: drop-shadow(0 0 28px rgba(245, 197, 24, 0.45));
+}
+
+/* Progress wrapper */
+.splash-progress-wrapper {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  width: 240px;
+}
+
+/* Bar track */
+.splash-bar-track {
+  width: 100%;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Filled portion */
+.splash-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #b8941a 0%, #F5C518 60%, #ffe066 100%);
+  border-radius: 999px;
+  position: relative;
+  transition: width 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  min-width: 4px;
+}
+
+/* Moving shimmer on the bar */
+.splash-bar-shimmer {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.5) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer-slide 1.4s linear infinite;
+}
+
+@keyframes shimmer-slide {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+
+/* Status row */
+.splash-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.splash-status-text {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.22em;
+  color: rgba(245, 197, 24, 0.7);
+  text-transform: uppercase;
+  animation: text-blink 1.2s step-end infinite;
+}
+
+.splash-status-percent {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+@keyframes text-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+

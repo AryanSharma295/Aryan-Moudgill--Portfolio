@@ -78,12 +78,12 @@ async function main() {
   for (const inFile of inputs) {
     const { webm, mp4, poster } = outNames(inFile);
 
-    // Poster (frame at 1s)
+    // Poster (frame at 0s)
     if (!existsSync(poster)) {
       await run(ffmpegPath, [
         '-y',
         '-ss',
-        '1',
+        '0',
         '-i',
         inFile,
         '-frames:v',
@@ -109,6 +109,8 @@ async function main() {
         'slow',
         '-crf',
         '20',
+        '-bf',
+        '0',
         '-pix_fmt',
         'yuv420p',
         '-movflags',

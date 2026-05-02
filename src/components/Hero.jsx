@@ -17,6 +17,7 @@ export default function Hero() {
             { src: '/optimized/hero-video.mp4', type: 'video/mp4' },
           ]}
           className="w-full h-full object-cover opacity-60"
+          priority
         />
         <div className="absolute top-0 left-0 right-0 h-[400px] bg-gradient-to-b from-black to-transparent pointer-events-none z-10"></div>
         <div className="absolute bottom-0 left-0 right-0 h-[30px] bg-gradient-to-t from-black to-transparent pointer-events-none z-10"></div>

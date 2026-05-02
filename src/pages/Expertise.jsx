@@ -212,11 +212,11 @@ export default function Expertise() {
                   <VideoBackground
                     poster="/optimized/red_flow.jpg"
                     sources={[
-                      { src: '/optimized/red_flow.webm', type: 'video/webm; codecs=\"vp9\"' },
+                      { src: '/optimized/red_flow.webm', type: 'video/webm; codecs="vp9"' },
                       { src: '/optimized/red_flow.mp4', type: 'video/mp4' },
                     ]}
                     className="w-full h-full object-cover"
-                    rootMargin="1400px"
+                    priority
                   />
                 </div>
                 {/* Overlays for better text readability and blending */}

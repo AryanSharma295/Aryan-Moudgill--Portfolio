@@ -24,10 +24,13 @@ export default function VideoBackground({
   filter,
   poster,
   rootMargin = '1000px',
+  priority = false,   // true = load immediately, skip IntersectionObserver
+  objectFit = 'cover', // passed directly to the <video> element
 }) {
   const videoRef = useRef(null);
   const hlsRef = useRef(null);
-  const [shouldLoad, setShouldLoad] = useState(false);
+  // Priority videos start loading right away; others wait for viewport
+  const [shouldLoad, setShouldLoad] = useState(priority);
   const [isLoaded, setIsLoaded] = useState(false);
 
   const canAutoplay = useMemo(() => {
@@ -55,6 +58,9 @@ export default function VideoBackground({
   }, [isHls]);
 
   useEffect(() => {
+    // Priority videos skip the IO gate entirely — they load on mount
+    if (priority) return;
+
     const video = videoRef.current;
     if (!video) return;
 
@@ -77,7 +83,7 @@ export default function VideoBackground({
 
     io.observe(video);
     return () => io.disconnect();
-  }, [canAutoplay, rootMargin]);
+  }, [canAutoplay, rootMargin, priority]);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -129,8 +135,17 @@ export default function VideoBackground({
         return;
       }
 
-      // Regular MP4
-      video.src = pickSource();
+      // Regular MP4 / WebM
+      const chosenSrc = pickSource();
+      video.src = chosenSrc;
+
+      // play() must be called explicitly — the IO observer was our only
+      // play() call before. For priority videos (no IO) we call it here.
+      if (canAutoplay) {
+        video.addEventListener('canplay', () => {
+          if (!cancelled) video.play().catch(() => {});
+        }, { once: true });
+      }
     })();
 
     return () => {
@@ -161,13 +176,14 @@ export default function VideoBackground({
 
       <video
         ref={videoRef}
-        className="absolute inset-0 w-full h-full object-cover"
+        className="absolute inset-0 w-full h-full"
         loop
         muted
         playsInline
-        preload="none"
+        preload={priority ? 'auto' : 'none'}
         onLoadedData={() => setIsLoaded(true)}
         style={{
+          objectFit,
           opacity: isLoaded ? 1 : 0,
           transition: 'opacity 300ms ease',
         }}
